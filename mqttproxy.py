@@ -1,19 +1,8 @@
-# Grott Growatt monitor :  Proxy
-#
-# Updated: 2022-08-07
-# Version 2.7.5
-
-import codecs
-import datetime
-import json
 import select
 import ssl
 import socket
-import struct
 import sys
-import textwrap
 import time
-from itertools import cycle  # to support "cycling" the iterator
 from mqtt_message import MQTTControlPacket
 
 # to resolve errno 32: broken pipe issue (only linux)
@@ -28,8 +17,11 @@ buffer_size = 4096
 delay = 0.0002
 
 client_context = ssl.create_default_context()
+
+
 class Forward:
     def __init__(self):
+        client_context.check_hostname = False
         client_context.verify_mode = ssl.CERT_NONE
         self.forward = client_context.wrap_socket(
             socket.socket(socket.AF_INET, socket.SOCK_STREAM))
@@ -61,20 +53,20 @@ class Proxy:
 
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # set default grottip address
-        if conf.grottip == "default":
-            conf.grottip = '0.0.0.0'
-        self.server.bind((conf.grottip, conf.grottport))
+        if conf.mqttip == "default":
+            conf.mqttip = '0.0.0.0'
+        self.server.bind((conf.mqttip, conf.mqttport))
         # socket.gethostbyname(socket.gethostname())
         try:
             hostname = (socket.gethostname())
             print("Hostname :", hostname)
             print("IP : ", socket.gethostbyname(hostname),
-                  ", port : ", conf.grottport, "\n")
+                  ", port : ", conf.mqttport, "\n")
         except:
             print("IP and port information not available")
 
         self.server.listen(200)
-        self.forward_to = (conf.growattip, conf.growattport)
+        self.forward_to = (conf.alip, conf.alport)
 
     def main(self, conf):
         self.input_list.append(self.server)

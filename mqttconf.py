@@ -46,19 +46,6 @@ class Conf:
         # Process config file
         self.procconf()
 
-        # Process environmental variable
-        self.procenv()
-
-        # Process environmental variable to override config and environmental settings
-        self.parserset()
-
-        # Prepare invert settings
-        self.SN = "".join(['{:02x}'.format(ord(x)) for x in self.inverterid])
-        self.offset = 6
-        if self.compat:
-            # set offset for older inverter types or after record change by Growatt
-            self.offset = int(self.valueoffset)
-
     def parserinit(self):
         # Process commandline parameters init (read args, process c,v,o settings)
         parser = argparse.ArgumentParser(prog='grott')

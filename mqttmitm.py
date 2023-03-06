@@ -1,4 +1,4 @@
-from grottproxy import Proxy
+from mqttproxy import Proxy
 from mqttconf import Conf
 import sys
 verrel = "0.0.1"
