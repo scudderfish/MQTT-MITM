@@ -7,6 +7,7 @@ import codecs
 import datetime
 import json
 import select
+import ssl
 import socket
 import struct
 import sys
@@ -26,10 +27,12 @@ buffer_size = 4096
 # buffer_size = 65535
 delay = 0.0002
 
-
+client_context = ssl.create_default_context()
 class Forward:
     def __init__(self):
-        self.forward = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_context.verify_mode = ssl.CERT_NONE
+        self.forward = client_context.wrap_socket(
+            socket.socket(socket.AF_INET, socket.SOCK_STREAM))
 
     def start(self, host, port):
         try:
@@ -53,7 +56,8 @@ class Proxy:
             signal(SIGPIPE, SIG_DFL)
         ##
 
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server = ssl.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM),
+                                      certfile='./cert.pem', server_side=True, ssl_version=ssl.PROTOCOL_TLS)
 
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         # set default grottip address

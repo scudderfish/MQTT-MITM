@@ -1,6 +1,6 @@
 
 import struct
-from grottdata import format_multi_line
+from mqttdata import format_multi_line
 
 
 class MQTTControlPacket:
