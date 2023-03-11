@@ -47,6 +47,6 @@ All this code is redundant.  In oredr to find out what the shower subscribes to 
 <id>/experience/# 
 <id>/debug/#
 ```
-Poking the obvious `{"state": true}` into `request/onoffstate`turns the shower on and `{"temperature":4600}`sets the temperature to 46C.
+Poking the obvious `{"state": true}` into `request/onoffstate` turns the shower on and `{"temperature":4600}` into `request/temperature` sets the temperature to 46C.
 
 The moral of the story is, if you have an MQTT broker, your shower belongs to you.
