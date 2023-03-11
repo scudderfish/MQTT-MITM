@@ -38,3 +38,15 @@ This enables us to set up read only access to the live data from the shower in H
 
 ## Where Next
 The code in this repo is a horrible mashup of https://github.com/johanmeijer/grott and https://github.com/nikitastupin/mitmproxy-mqtt-script I assume that the shower subscribes to a topic that Aqualisa uses to send it commands to turn on/off and set temperature.  I wanted to put this code inbetween so I could capture the commands coming the other way, but I suspect I'm going to be foiled by a client cert burnt into the shower.
+
+## Update 11/03/2023
+All this code is redundant.  In oredr to find out what the shower subscribes to I only had to increase the log level of the broker.  This revealed the following subscriptions
+```
+<id>/request/+
+<id>/settings/#
+<id>/experience/# 
+<id>/debug/#
+```
+Poking the obvious `{"state": true}` into `request/onoffstate`turns the shower on and `{"temperature":4600}`sets the temperature to 46C.
+
+The moral of the story is, if you have an MQTT broker, your shower belongs to you.
